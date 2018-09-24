@@ -3,7 +3,7 @@ var aStore = require('app-store-scraper');
 var gStore = require('google-play-scraper');
 
 var config = require("./config.json")       // config file to select which column you want to get the values from
-var workbook = XLSX.readFile('./Apps-and-etools-library.xlsx'); // change this if needed
+var workbook = XLSX.readFile('./apps.xlsx'); // change this if needed
 
 var first_sheet_name = workbook.SheetNames[0];
 
@@ -59,7 +59,6 @@ function getGoogleData () {
     for (var googleObject in googleIds) {
         var gId = googleIds[googleObject].cellValue
         gStore.app({appId: gId}).then((data) => {
-            console.log(data)
             console.log({
                 dataId: data.appId, 
                 price: data.price,
