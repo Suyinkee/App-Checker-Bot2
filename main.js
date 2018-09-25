@@ -33,23 +33,30 @@ function main (arrayValue) {
 }
 
 // querying the app store  
-function getAppleData() {
+function getAndWriteAppleDataToCSV() {
+    var ws = XLSX.utils.aoa_to_sheet([ [
+        "AppleId", "Price", "updated", "version", "developer", "developerUrl"
+    ] ]);
     var appleIds = main(0)
     for (var appleObject in appleIds) {
         var aId = appleIds[appleObject].cellValue
         aStore.app({id: aId}).then((data) => {
-            console.log({
-                dataId: data.id, 
-                price: data.price,
-                updated: data.updated, 
-                version: data.version, 
-                developer: data.developer, 
-                developerUrl: data.developerUrl
-            }) 
-            console.log("")
-        }).catch( (err) => {
-            // console.log("Tehre was error: ", err)
-        });
+            var dataObject = [
+                [
+                    data.id, 
+                    data.price,
+                    data.updated, 
+                    data.version, 
+                    data.developer, 
+                    data.developerUrl
+                ],
+            ]
+        })
+        .then ( () => {
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, "AppleData.xlsx");
+        })
     }
 }
 
@@ -72,7 +79,11 @@ function getGoogleData () {
     }
 }
 
-getGoogleData()
-getAppleData()
 
+/* 
+    Run the main function here 
+*/
+
+// getGoogleData()
+getAndWriteAppleDataToCSV()
  
